@@ -2,30 +2,34 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Remuneração, Salário e Verbas</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* 1. CONFIGURAÇÃO GERAL - MODO APRESENTAÇÃO */
+        /* 1. CONFIGURAÇÃO GERAL */
         * {
             box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+            -webkit-tap-highlight-color: transparent; /* Remove flash de toque no mobile */
         }
 
         body {
             background-color: #eef2f5;
             margin: 0;
             padding: 0;
-            height: 100vh; /* Ocupa toda a altura da tela */
+            height: 100vh;
             width: 100vw;
-            overflow: hidden; /* Impede a rolagem */
+            overflow: hidden; 
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Open Sans', sans-serif;
             color: #2c3e50;
+            user-select: none; /* Previne seleção de texto acidental ao tocar */
         }
 
         /* Container do Slide */
@@ -34,7 +38,7 @@
             background-image: none; 
             border-radius: 12px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0,0,0,0.05);
-            display: none; /* Oculto por padrão */
+            display: none;
             flex-direction: column;
             height: 720px;
             width: 1280px;
@@ -43,367 +47,170 @@
             position: relative;
             border: 1px solid #fff;
             
-            /* Animação suave de entrada */
             opacity: 0;
             transition: opacity 0.4s ease-in-out;
             transform-origin: center center;
+            pointer-events: none; /* Permite clicar através do slide para a camada de toque */
         }
 
-        /* Classe para mostrar o slide ativo */
+        /* Reativa cliques para links ou interações dentro do slide, se houver */
+        .slide-container * {
+            pointer-events: auto;
+        }
+
         .slide-container.active {
             display: flex;
             opacity: 1;
         }
 
-        /* Barra de Acento Superior */
+        /* --- ESTILOS DECORATIVOS E TIPOGRAFIA (MANTIDOS) --- */
         .slide-container::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 6px;
+            top: 0; left: 0; width: 100%; height: 6px;
             background: linear-gradient(90deg, #2c3e50 0%, #3498db 50%, #e74c3c 100%);
             z-index: 2;
         }
-
-        /* Elemento decorativo de fundo */
         .slide-container::after {
             content: '';
             position: absolute;
-            bottom: -100px;
-            right: -100px;
-            width: 300px;
-            height: 300px;
+            bottom: -100px; right: -100px; width: 300px; height: 300px;
             border-radius: 50%;
             background: radial-gradient(circle, rgba(52, 152, 219, 0.05) 0%, transparent 70%);
             z-index: 0;
             pointer-events: none;
         }
+        h1, h2, h3 { font-family: 'Montserrat', sans-serif; color: #2c3e50; margin: 0; z-index: 1; }
+        .slide-container h1 { font-size: 96px; font-weight: 800; line-height: 1.1; letter-spacing: -2px; color: #1a252f; }
+        .slide-container h1 span { color: #3498db; }
+        .slide-title { font-size: 52px; font-weight: 700; margin-bottom: 50px; padding-bottom: 20px; width: 100%; border-bottom: 3px solid #f0f2f5; color: #2c3e50; position: relative; }
+        .slide-title::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 100px; height: 3px; background-color: #3498db; }
+        h3 { font-size: 28px; font-weight: 700; margin-bottom: 15px; color: #34495e; }
+        p, li { font-size: 24px; line-height: 1.6; color: #576574; margin-bottom: 15px; font-weight: 400; }
+        .subtitle { font-family: 'Montserrat', sans-serif; font-size: 36px; color: #7f8c8d; font-weight: 400; margin-top: 20px; letter-spacing: 1px; }
+        .content-area { display: flex; flex-direction: column; flex-grow: 1; justify-content: center; width: 100%; z-index: 1; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; width: 100%; align-items: center; }
+        .two-column.tiled { align-items: stretch; }
+        .single-column-centered { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; max-width: 900px; margin: 0 auto; }
+        .tile, .two-column.tiled > div { background-color: #fff; border: 1px solid #e1e8ed; border-radius: 16px; padding: 40px; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        hr { border: 0; border-top: 1px solid #e1e8ed; margin: 25px 0; }
+        ul { list-style: none; padding: 0; }
+        ul li { padding-left: 35px; position: relative; margin-bottom: 20px; }
+        ul li::before { content: '\f058'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; left: 0; top: 2px; color: #27ae60; font-size: 22px; }
+        ul li.danger::before { content: '\f057'; color: #c0392b; }
+        .icon-large { font-size: 50px; color: #3498db; margin-bottom: 25px; display: inline-block; background: rgba(52, 152, 219, 0.1); padding: 15px; border-radius: 12px; }
+        .bar { margin-bottom: 25px; }
+        .bar .label { font-family: 'Montserrat', sans-serif; font-weight: 600; margin-bottom: 8px; display: block; font-size: 20px; color: #2c3e50; }
+        .bar-track { background-color: #ecf0f1; border-radius: 8px; height: 45px; width: 100%; overflow: hidden; }
+        .bar-fill { height: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 20px; color: #fff; font-weight: 700; font-size: 20px; border-radius: 8px; box-shadow: inset 0 -2px 0 rgba(0,0,0,0.1); }
+        .section-title-layout { text-align: center; justify-content: center; border: 2px solid #3498db; background-color: #fcfcfc; }
+        .section-title-layout h2 { font-size: 80px; color: #2c3e50; margin-bottom: 10px; }
+        strong { color: #2c3e50; font-weight: 700; }
+        .highlight-number { font-size: 64px; font-weight: 800; color: #e67e22; font-family: 'Montserrat', sans-serif; }
+        .qa-box { background-color: #e8f4fc; border-left: 6px solid #3498db; padding: 25px 30px; border-radius: 8px; margin-top: 35px; text-align: left; width: 100%; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .qa-box-title { color: #2980b9; font-weight: 800; font-family: 'Montserrat', sans-serif; font-size: 24px; margin-bottom: 10px; display: block; }
+        .qa-box-content { font-size: 24px; color: #34495e; margin: 0; line-height: 1.5; }
 
-        /* 2. TIPOGRAFIA */
-        h1, h2, h3 {
-            font-family: 'Montserrat', sans-serif;
-            color: #2c3e50;
-            margin: 0;
-            z-index: 1;
-        }
-
-        .slide-container h1 {
-            font-size: 96px;
-            font-weight: 800;
-            line-height: 1.1;
-            letter-spacing: -2px;
-            color: #1a252f;
-        }
-
-        .slide-container h1 span {
-            color: #3498db;
-        }
-
-        .slide-title {
-            font-size: 52px;
-            font-weight: 700;
-            margin-bottom: 50px;
-            padding-bottom: 20px;
-            width: 100%;
-            border-bottom: 3px solid #f0f2f5;
-            color: #2c3e50;
-            position: relative;
-        }
-        
-        .slide-title::after {
-            content: '';
-            position: absolute;
-            bottom: -3px;
-            left: 0;
-            width: 100px;
-            height: 3px;
-            background-color: #3498db;
-        }
-
-        h3 {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: #34495e;
-        }
-
-        p, li {
-            font-size: 24px;
-            line-height: 1.6;
-            color: #576574;
-            margin-bottom: 15px;
-            font-weight: 400;
-        }
-
-        .subtitle {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 36px;
-            color: #7f8c8d;
-            font-weight: 400;
-            margin-top: 20px;
-            letter-spacing: 1px;
-        }
-
-        /* 3. LAYOUTS */
-        .content-area {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            justify-content: center;
-            width: 100%;
-            z-index: 1;
-        }
-
-        .two-column {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            width: 100%;
-            align-items: center;
-        }
-
-        .two-column.tiled {
-            align-items: stretch;
-        }
-
-        .single-column-centered {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .tile, .two-column.tiled > div {
-            background-color: #fff;
-            border: 1px solid #e1e8ed;
-            border-radius: 16px;
-            padding: 40px;
-            position: relative;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .tile:hover, .two-column.tiled > div:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.15);
-            border-color: #3498db;
-        }
-
-        .tile h3, .two-column.tiled > div h3 {
-            color: #2980b9;
-            margin-bottom: 20px;
-            font-size: 30px;
-        }
-
-        hr {
-            border: 0;
-            border-top: 1px solid #e1e8ed;
-            margin: 25px 0;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        
-        ul li {
-            padding-left: 35px;
-            position: relative;
-            margin-bottom: 20px;
-        }
-        
-        ul li::before {
-            content: '\f058';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            left: 0;
-            top: 2px;
-            color: #27ae60;
-            font-size: 22px;
-        }
-
-        ul li.danger::before {
-            content: '\f057';
-            color: #c0392b;
-        }
-
-        .icon-large {
-            font-size: 50px;
-            color: #3498db;
-            margin-bottom: 25px;
-            display: inline-block;
-            background: rgba(52, 152, 219, 0.1);
-            padding: 15px;
-            border-radius: 12px;
-        }
-
-        .bar {
-            margin-bottom: 25px;
-        }
-        
-        .bar .label {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: block;
-            font-size: 20px;
-            color: #2c3e50;
-        }
-        
-        .bar-track {
-            background-color: #ecf0f1;
-            border-radius: 8px;
-            height: 45px;
-            width: 100%;
-            overflow: hidden;
-        }
-        
-        .bar-fill {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 20px;
-            color: #fff;
-            font-weight: 700;
-            font-size: 20px;
-            border-radius: 8px;
-            box-shadow: inset 0 -2px 0 rgba(0,0,0,0.1);
-        }
-
-        .section-title-layout {
-            text-align: center;
-            justify-content: center;
-            border: 2px solid #3498db;
-            background-color: #fcfcfc;
-        }
-        
-        .section-title-layout h2 {
-            font-size: 80px;
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-
-        strong {
-            color: #2c3e50;
-            font-weight: 700;
-        }
-
-        .highlight-number {
-            font-size: 64px; 
-            font-weight: 800; 
-            color: #e67e22; 
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .qa-box {
-            background-color: #e8f4fc;
-            border-left: 6px solid #3498db;
-            padding: 25px 30px;
-            border-radius: 8px;
-            margin-top: 35px;
-            text-align: left;
-            width: 100%;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        }
-
-        .qa-box-title {
-            color: #2980b9;
-            font-weight: 800;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 24px;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .qa-box-content {
-            font-size: 24px;
-            color: #34495e;
-            margin: 0;
-            line-height: 1.5;
-        }
-
-        /* Controles de Navegação (Feedback visual opcional) */
         .nav-hint {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            font-size: 14px;
-            color: #95a5a6;
-            opacity: 0.5;
+            position: absolute; bottom: 20px; right: 20px; font-size: 14px; color: #95a5a6; opacity: 0.5;
         }
 
-        /* 4. CONTROLES MÓVEIS (Arrows) */
-        .mobile-controls {
-            display: none; /* Escondido por padrão no desktop */
+        /* 4. CONTROLES DE NAVEGAÇÃO FLUTUANTES (Novo Design) */
+        .nav-overlay {
             position: fixed;
-            bottom: 20px;
-            left: 0;
-            width: 100%;
-            justify-content: space-between;
-            padding: 0 30px;
-            z-index: 100;
-            pointer-events: none; /* Permite clicar através do container, apenas botões clicáveis */
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 500;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none; /* O clique passa pelo container, pegamos no body */
+        }
+        
+        /* Classe para mostrar os controles */
+        .controls-visible .nav-overlay {
+            opacity: 1;
         }
 
         .nav-btn {
-            background-color: rgba(44, 62, 80, 0.8);
-            color: white;
-            border: none;
-            width: 60px;
-            height: 60px;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #2c3e50;
+            border: 1px solid rgba(0,0,0,0.1);
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            font-size: 24px;
+            font-size: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            pointer-events: auto; /* Reativa cliques nos botões */
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            backdrop-filter: blur(5px);
         }
 
-        .nav-btn:active {
-            transform: scale(0.9);
-            background-color: #3498db;
+        .nav-prev { left: 20px; }
+        .nav-next { right: 20px; }
+
+        /* Áreas de Toque Invisíveis (Instagram Style) */
+        .tap-zone {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            z-index: 400; /* Acima dos slides, abaixo dos botões PDF */
+            /* background: rgba(255,0,0,0.1); Debug: ver as áreas */
         }
+        .tap-left { left: 0; width: 35%; cursor: w-resize; }
+        .tap-right { right: 0; width: 35%; cursor: e-resize; }
+
+
+        /* BOTÃO DE PDF */
+        .pdf-btn {
+            position: fixed; top: 20px; right: 20px; background-color: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-family: 'Open Sans', sans-serif; font-weight: 600; cursor: pointer; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: background 0.2s; display: flex; align-items: center; gap: 8px;
+        }
+        .pdf-btn:hover { background-color: #c0392b; }
 
         /* MEDIA QUERY PARA MOBILE */
         @media (max-width: 768px) {
-            .mobile-controls {
-                display: flex; /* Mostra as setas no mobile */
-            }
-
-            .nav-hint {
-                display: none; /* Esconde a dica de teclado no mobile */
-            }
-
-            /* Ajuste de escala para o slide caber na tela do celular */
-            .slide-container {
-                /* Escala o slide de 1280px para caber na largura da tela */
-                transform: scale(0.28); /* Ajuste aproximado para telas ~375px */
-            }
+            .nav-hint { display: none; }
+            .slide-container { transform: scale(0.28); }
+            @media (min-width: 376px) and (max-width: 500px) { .slide-container { transform: scale(0.35); } }
+            @media (min-width: 501px) and (max-width: 768px) { .slide-container { transform: scale(0.55); } }
             
-            /* Ajuste dinâmico de escala baseado na largura da tela usando JS seria ideal, 
-               mas aqui usamos media queries para breakpoints comuns ou deixamos o container flexível.
-               Como o layout é fixo em pixels, a melhor abordagem puramente CSS é zoom/scale. */
-            @media (min-width: 376px) and (max-width: 500px) {
-                 .slide-container { transform: scale(0.35); }
+            /* Ajusta posição das setas no mobile */
+            .nav-btn {
+                width: 45px; height: 45px;
+                background-color: rgba(255, 255, 255, 0.9);
             }
-            @media (min-width: 501px) and (max-width: 768px) {
-                 .slide-container { transform: scale(0.55); }
-            }
+            .nav-prev { left: 10px; }
+            .nav-next { right: 10px; }
         }
 
+        /* 5. ESTILOS DE IMPRESSÃO (PDF) */
+        @media print {
+            @page { size: landscape; margin: 0; }
+            body { background: none; height: auto; width: 100%; overflow: visible; display: block; }
+            .slide-container { display: flex !important; opacity: 1 !important; transform: none !important; width: 100%; height: 100vh; page-break-after: always; break-after: page; margin: 0; border: none; box-shadow: none; border-radius: 0; }
+            .slide-container:last-child { page-break-after: avoid; break-after: avoid; }
+            .nav-hint, .nav-overlay, .pdf-btn, .tap-zone { display: none !important; }
+        }
     </style>
 </head>
-<body>
+<body class="controls-visible">
+
+<!-- Áreas de Toque (Stories Style) -->
+<div class="tap-zone tap-left" id="tapLeft"></div>
+<div class="tap-zone tap-right" id="tapRight"></div>
+
+<!-- Setas Visuais (Feedback) -->
+<div class="nav-overlay nav-prev">
+    <div class="nav-btn"><i class="fa-solid fa-chevron-left"></i></div>
+</div>
+<div class="nav-overlay nav-next">
+    <div class="nav-btn"><i class="fa-solid fa-chevron-right"></i></div>
+</div>
+
+<!-- BOTÃO SALVAR PDF -->
+<button class="pdf-btn" onclick="window.print()">
+    <i class="fa-solid fa-file-pdf"></i> Salvar PDF
+</button>
 
 <!-- SLIDE 1: Title Slide -->
 <div class="slide-container active" id="slide1">
@@ -412,7 +219,7 @@
         <h1>Remuneração<br><span>& Salário</span></h1>
         <p class="subtitle">Verbas Salariais e Indenizatórias</p>
     </div>
-    <div class="nav-hint">Use as setas ⬅ ➡ para navegar</div>
+    <div class="nav-hint">Use as setas ⬅ ➡ ou toque nas laterais</div>
 </div>
 
 <!-- PART 1: Slide 2 - Intro -->
@@ -728,17 +535,12 @@
     </div>
 </div>
 
-<!-- CONTROLES MÓVEIS -->
-<div class="mobile-controls">
-    <button class="nav-btn" id="prevBtnMobile"><i class="fa-solid fa-chevron-left"></i></button>
-    <button class="nav-btn" id="nextBtnMobile"><i class="fa-solid fa-chevron-right"></i></button>
-</div>
-
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide-container');
         const totalSlides = slides.length;
+        let controlsTimeout;
 
         function showSlide(index) {
             slides.forEach((slide, i) => {
@@ -750,12 +552,57 @@
             });
         }
         
-        // Função para escala dinâmica no mobile
+        // --- FUNÇÕES DE NAVEGAÇÃO ---
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+                activateControls();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+                activateControls();
+            }
+        }
+
+        // --- SISTEMA DE CONTROLES AUTO-HIDE ---
+        function activateControls() {
+            document.body.classList.add('controls-visible');
+            clearTimeout(controlsTimeout);
+            
+            // Esconder após 3 segundos sem interação
+            controlsTimeout = setTimeout(() => {
+                document.body.classList.remove('controls-visible');
+            }, 3000);
+        }
+
+        // Ativar controles em qualquer interação
+        ['mousemove', 'touchstart', 'click'].forEach(evt => {
+            document.addEventListener(evt, activateControls);
+        });
+
+        // --- HANDLERS DE CLICK (TAP ZONES) ---
+        // Instagram Stories Style Logic
+        document.getElementById('tapRight').addEventListener('click', (e) => {
+            // Evita mudar se clicou no botão de PDF (o z-index cuida disso, mas por segurança)
+            e.preventDefault();
+            nextSlide();
+        });
+
+        document.getElementById('tapLeft').addEventListener('click', (e) => {
+            e.preventDefault();
+            prevSlide();
+        });
+
+        // --- AJUSTE DE ESCALA (RESPONSIVIDADE) ---
         function adjustScale() {
             if (window.innerWidth <= 768) {
                 const slides = document.querySelectorAll('.slide-container');
                 const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720) * 0.95; 
-                // 0.95 para dar uma margem segura
                 
                 slides.forEach(slide => {
                     slide.style.transform = `scale(${scale})`;
@@ -768,29 +615,14 @@
             }
         }
 
-        // Mostrar o primeiro slide inicialmente
+        // Inicialização
         showSlide(currentSlide);
         adjustScale();
+        activateControls();
         
-        // Ajustar escala ao redimensionar
         window.addEventListener('resize', adjustScale);
 
-        // Funções de Navegação
-        function nextSlide() {
-            if (currentSlide < totalSlides - 1) {
-                currentSlide++;
-                showSlide(currentSlide);
-            }
-        }
-
-        function prevSlide() {
-            if (currentSlide > 0) {
-                currentSlide--;
-                showSlide(currentSlide);
-            }
-        }
-
-        // Event listener para as setas do teclado
+        // --- NAVEGAÇÃO POR TECLADO ---
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'Enter') {
                 nextSlide();
@@ -798,10 +630,6 @@
                 prevSlide();
             }
         });
-
-        // Event listeners para os botões mobile
-        document.getElementById('nextBtnMobile').addEventListener('click', nextSlide);
-        document.getElementById('prevBtnMobile').addEventListener('click', prevSlide);
     });
 </script>
 
