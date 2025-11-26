@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remuneração, Salário e Verbas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* 1. CONFIGURAÇÃO GERAL - MODO APRESENTAÇÃO */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #eef2f5;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Ocupa toda a altura da tela */
+            width: 100vw;
+            overflow: hidden; /* Impede a rolagem */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Open Sans', sans-serif;
+            color: #2c3e50;
+        }
+
+        /* Container do Slide */
+        .slide-container {
+            background-color: #ffffff;
+            background-image: none; 
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0,0,0,0.05);
+            display: none; /* Oculto por padrão */
+            flex-direction: column;
+            height: 720px;
+            width: 1280px;
+            overflow: hidden;
+            padding: 60px 80px;
+            position: relative;
+            border: 1px solid #fff;
+            
+            /* Animação suave de entrada */
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        /* Classe para mostrar o slide ativo */
+        .slide-container.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* Barra de Acento Superior */
+        .slide-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #2c3e50 0%, #3498db 50%, #e74c3c 100%);
+            z-index: 2;
+        }
+
+        /* Elemento decorativo de fundo */
+        .slide-container::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(52, 152, 219, 0.05) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* 2. TIPOGRAFIA */
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: #2c3e50;
+            margin: 0;
+            z-index: 1;
+        }
+
+        .slide-container h1 {
+            font-size: 96px;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            color: #1a252f;
+        }
+
+        .slide-container h1 span {
+            color: #3498db;
+        }
+
+        .slide-title {
+            font-size: 52px;
+            font-weight: 700;
+            margin-bottom: 50px;
+            padding-bottom: 20px;
+            width: 100%;
+            border-bottom: 3px solid #f0f2f5;
+            color: #2c3e50;
+            position: relative;
+        }
+        
+        .slide-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100px;
+            height: 3px;
+            background-color: #3498db;
+        }
+
+        h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #34495e;
+        }
+
+        p, li {
+            font-size: 24px;
+            line-height: 1.6;
+            color: #576574;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 36px;
+            color: #7f8c8d;
+            font-weight: 400;
+            margin-top: 20px;
+            letter-spacing: 1px;
+        }
+
+        /* 3. LAYOUTS */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: center;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            width: 100%;
+            align-items: center;
+        }
+
+        .two-column.tiled {
+            align-items: stretch;
+        }
+
+        .single-column-centered {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .tile, .two-column.tiled > div {
+            background-color: #fff;
+            border: 1px solid #e1e8ed;
+            border-radius: 16px;
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .tile:hover, .two-column.tiled > div:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.15);
+            border-color: #3498db;
+        }
+
+        .tile h3, .two-column.tiled > div h3 {
+            color: #2980b9;
+            margin-bottom: 20px;
+            font-size: 30px;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #e1e8ed;
+            margin: 25px 0;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        ul li {
+            padding-left: 35px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        ul li::before {
+            content: '\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: #27ae60;
+            font-size: 22px;
+        }
+
+        ul li.danger::before {
+            content: '\f057';
+            color: #c0392b;
+        }
+
+        .icon-large {
+            font-size: 50px;
+            color: #3498db;
+            margin-bottom: 25px;
+            display: inline-block;
+            background: rgba(52, 152, 219, 0.1);
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .bar {
+            margin-bottom: 25px;
+        }
+        
+        .bar .label {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 20px;
+            color: #2c3e50;
+        }
+        
+        .bar-track {
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            height: 45px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .bar-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 20px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 20px;
+            border-radius: 8px;
+            box-shadow: inset 0 -2px 0 rgba(0,0,0,0.1);
+        }
+
+        .section-title-layout {
+            text-align: center;
+            justify-content: center;
+            border: 2px solid #3498db;
+            background-color: #fcfcfc;
+        }
+        
+        .section-title-layout h2 {
+            font-size: 80px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        strong {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+
+        .highlight-number {
+            font-size: 64px; 
+            font-weight: 800; 
+            color: #e67e22; 
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .qa-box {
+            background-color: #e8f4fc;
+            border-left: 6px solid #3498db;
+            padding: 25px 30px;
+            border-radius: 8px;
+            margin-top: 35px;
+            text-align: left;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .qa-box-title {
+            color: #2980b9;
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .qa-box-content {
+            font-size: 24px;
+            color: #34495e;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Controles de Navegação (Feedback visual opcional) */
+        .nav-hint {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: #95a5a6;
+            opacity: 0.5;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 1: Title Slide -->
+<div class="slide-container active" id="slide1">
+    <div class="content-area" style="align-items: flex-start; text-align: left;">
+        <div style="width: 100px; height: 8px; background: #3498db; margin-bottom: 40px;"></div>
+        <h1>Remuneração<br><span>& Salário</span></h1>
+        <p class="subtitle">Verbas Salariais e Indenizatórias</p>
+    </div>
+    <div class="nav-hint">Use as setas ⬅ ➡ para navegar</div>
+</div>
+
+<!-- PART 1: Slide 2 - Intro -->
+<div class="slide-container" id="slide2">
+    <div class="content-area single-column-centered">
+        <h3 style="color: #e67e22; text-transform: uppercase; font-size: 18px; letter-spacing: 2px;">Parte 1: O Conceito</h3>
+        <h2 style="font-size: 60px; margin: 10px 0 40px;">Salário vs. Remuneração</h2>
+        <p style="font-size: 28px;">A lei faz uma distinção crucial entre o valor pago diretamente pelo empregador e o montante total recebido pelo trabalhador.</p>
+        <p style="font-size: 28px;">Entender essa diferença é o primeiro passo para garantir a <strong>conformidade trabalhista</strong> e evitar passivos.</p>
+    </div>
+</div>
+
+<!-- PART 1: Slide 3 - Salário vs Remuneração -->
+<div class="slide-container" id="slide3">
+    <h2 class="slide-title">1. Qual a Diferença?</h2>
+    <div class="content-area">
+        <div class="two-column tiled">
+            <div>
+                <i class="fa-solid fa-hand-holding-dollar icon-large"></i>
+                <h3>Salário</h3>
+                <p>É o dinheiro pago <strong>diretamente pelo empregador</strong> ao empregado como contraprestação pelo serviço.</p>
+                <hr>
+                <p style="font-size: 18px; color: #7f8c8d;"><i class="fa-solid fa-circle-info"></i> Inclui fixo e comissões da empresa.</p>
+            </div>
+            <div>
+                <i class="fa-solid fa-coins icon-large" style="color: #27ae60; background: rgba(39, 174, 96, 0.1);"></i>
+                <h3 style="color: #27ae60;">Remuneração</h3>
+                <p>É a soma do <strong>salário</strong> mais as <strong>gorjetas</strong> pagas por terceiros.</p>
+                <hr>
+                <p style="font-size: 18px; color: #7f8c8d;"><i class="fa-solid fa-expand"></i> Conceito amplo (Totalidade dos ganhos).</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PART 1: Slide 4 - Regra Importante -->
+<div class="slide-container" id="slide4">
+    <h2 class="slide-title">Regra de Ouro: "Item por Item"</h2>
+    <div class="content-area">
+        <div class="two-column tiled" style="grid-template-columns: 1fr 1fr 1fr; gap: 30px;">
+             <div style="border-top: 5px solid #c0392b;">
+                <div class="icon-large" style="color: #c0392b; background: rgba(192, 57, 43, 0.1);"><i class="fa-solid fa-ban"></i></div>
+                <h3 style="color: #c0392b;">Proibido</h3>
+                <p style="font-size: 20px;">Não pague valor único "fechado" (salário complessivo) juntando tudo.</p>
+            </div>
+            <div style="border-top: 5px solid #2980b9;">
+                <div class="icon-large"><i class="fa-solid fa-list-check"></i></div>
+                <h3>Obrigatório</h3>
+                <p style="font-size: 20px;">Separação detalhada no holerite (salário, horas extras, adicionais).</p>
+            </div>
+             <div style="border-top: 5px solid #f39c12;">
+                <div class="icon-large" style="color: #f39c12; background: rgba(243, 156, 18, 0.1);"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <h3 style="color: #f39c12;">Risco</h3>
+                <p style="font-size: 20px;">Pagamento sem discriminação pode ser considerado nulo.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PART 2: Slide 5 - Lei da Gorjeta Intro -->
+<div class="slide-container" id="slide5">
+    <div class="content-area single-column-centered">
+        <h3 style="color: #e67e22; text-transform: uppercase; font-size: 18px; letter-spacing: 2px;">Parte 2</h3>
+        <h2 style="font-size: 60px; margin: 10px 0 40px;">A "Lei da Gorjeta"</h2>
+        <div style="font-size: 28px; text-align: center;">
+            <p>As gorjetas compõem a remuneração, mas <strong>não são receita da empresa</strong>.</p>
+        </div>
+        
+        <div class="qa-box">
+            <span class="qa-box-title"><i class="fa-solid fa-circle-question"></i> Dúvida: Gorjeta integra remuneração?</span>
+            <p class="qa-box-content"><strong>SIM.</strong> Por fazer parte da remuneração, a gorjeta integra a base de cálculo para FGTS, Férias, 13º Salário e INSS.</p>
+        </div>
+    </div>
+</div>
+
+<!-- PART 2: Slide 6 - Retenção -->
+<div class="slide-container" id="slide6">
+    <h2 class="slide-title">Limites de Retenção</h2>
+    <div class="content-area">
+        <p style="margin-bottom: 40px; text-align: center; font-size: 26px;">Quanto a empresa pode reter para encargos?</p>
+        
+        <div style="width: 80%;">
+            <div class="bar">
+                <span class="label">Simples Nacional</span>
+                <div class="bar-track">
+                    <div class="bar-fill" style="width: 20%; background: #f39c12;">20% Retido</div>
+                </div>
+                <p style="font-size: 16px; text-align: right; margin-top: 5px; color: #95a5a6;">(Repassa 80% aos funcionários)</p>
+            </div>
+            
+            <div class="bar" style="margin-top: 40px;">
+                <span class="label">Outros Regimes</span>
+                <div class="bar-track">
+                    <div class="bar-fill" style="width: 33%; background: #e74c3c;">33% Retido</div>
+                </div>
+                <p style="font-size: 16px; text-align: right; margin-top: 5px; color: #95a5a6;">(Repassa 67% aos funcionários)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PART 2: Slide 7 - Incidência -->
+<div class="slide-container" id="slide7">
+    <h2 class="slide-title">Impactos da Gorjeta</h2>
+    <div class="content-area">
+        <div class="two-column tiled">
+            <div style="border-left: 5px solid #27ae60;">
+                <h3 style="color: #27ae60; font-size: 32px;"><i class="fa-solid fa-check-circle"></i> Incide Em:</h3>
+                <ul style="margin-top: 30px;">
+                    <li>FGTS</li>
+                    <li>13º Salário</li>
+                    <li>Férias</li>
+                    <li>INSS</li>
+                </ul>
+            </div>
+            <div style="border-left: 5px solid #c0392b;">
+                <h3 style="color: #c0392b; font-size: 32px;"><i class="fa-solid fa-times-circle"></i> NÃO Incide Em:</h3>
+                <ul style="margin-top: 30px;">
+                    <li class="danger">Aviso Prévio</li>
+                    <li class="danger">Adicional Noturno</li>
+                    <li class="danger">Horas Extras</li>
+                    <li class="danger">DSR (Descanso Semanal)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PART 3: Slide 8 - Periculosidade -->
+<div class="slide-container" id="slide8">
+    <div class="content-area single-column-centered">
+        <h3 style="color: #e67e22; text-transform: uppercase; font-size: 18px; letter-spacing: 2px;">Parte 3: Adicionais</h3>
+        <h2 style="font-size: 60px; margin: 10px 0 30px;">Periculosidade</h2>
+        <div style="display: flex; gap: 40px; align-items: center; margin-top: 40px;">
+            <div class="icon-large" style="font-size: 80px; padding: 30px; margin: 0; color: #e74c3c; background: rgba(231, 76, 60, 0.1);"><i class="fa-solid fa-bolt"></i></div>
+            <div style="text-align: left;">
+                <p style="margin-bottom: 20px;">Devido ao risco de morte imediato (explosivos, eletricidade, segurança, motoqueiros).</p>
+                <div style="padding: 20px; border-left: 6px solid #e74c3c; background: #fff0f0;">
+                    <span class="highlight-number" style="color: #c0392b;">30%</span>
+                    <p style="margin: 0; font-weight: 600;">Sobre o Salário-Base</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PART 3: Slide 9 - Insalubridade -->
+<div class="slide-container" id="slide9">
+    <h2 class="slide-title">Adicional de Insalubridade</h2>
+    <div class="content-area">
+        <p style="text-align: center; margin-bottom: 50px;">Aplicável para atividades com agentes nocivos à saúde (químicos, ruído, biológicos).</p>
+        
+        <div class="two-column tiled" style="grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+            <div style="text-align: center;">
+                <div class="icon-large"><i class="fa-solid fa-temperature-empty"></i></div>
+                <h3>Grau Mínimo</h3>
+                <p class="highlight-number" style="color: #3498db;">10%</p>
+                <p style="font-size: 16px;">Salário Mínimo</p>
+            </div>
+            <div style="text-align: center;">
+                <div class="icon-large" style="color: #f39c12; background: rgba(243, 156, 18, 0.1);"><i class="fa-solid fa-temperature-half"></i></div>
+                <h3 style="color: #f39c12;">Grau Médio</h3>
+                <p class="highlight-number" style="color: #f39c12;">20%</p>
+                <p style="font-size: 16px;">Salário Mínimo</p>
+            </div>
+            <div style="text-align: center;">
+                <div class="icon-large" style="color: #c0392b; background: rgba(192, 57, 43, 0.1);"><i class="fa-solid fa-temperature-full"></i></div>
+                <h3 style="color: #c0392b;">Grau Máximo</h3>
+                <p class="highlight-number" style="color: #c0392b;">40%</p>
+                <p style="font-size: 16px;">Salário Mínimo</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PART 3: Slide 10 - Noturno -->
+<div class="slide-container" id="slide10">
+    <h2 class="slide-title">Adicional Noturno e Reflexos</h2>
+    <div class="content-area" style="width: 100%;">
+        <div class="two-column" style="margin-bottom: 20px;">
+            <div>
+                 <div style="margin-bottom: 20px;">
+                    <strong style="font-size: 24px; display: block; color: #2c3e50;"><i class="fa-solid fa-clock" style="color: #3498db;"></i> Horário Urbano</strong>
+                    <span style="font-size: 22px; color: #7f8c8d;">22h às 5h (+20% adicional)</span>
+                </div>
+            </div>
+            <div>
+                <div style="margin-bottom: 20px;">
+                    <strong style="font-size: 24px; display: block; color: #2c3e50;"><i class="fa-solid fa-hourglass-half" style="color: #3498db;"></i> Hora Reduzida</strong>
+                    <span style="font-size: 22px; color: #7f8c8d;">1 hora = 52 min e 30 seg</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="qa-box" style="margin-top: 10px;">
+            <span class="qa-box-title"><i class="fa-solid fa-circle-question"></i> Dúvida: Adicional habitual gera reflexos?</span>
+            <p class="qa-box-content"><strong>SIM.</strong> Qualquer adicional (Noturno, Insalubridade, Periculosidade) pago com <strong>habitualidade</strong> integra o salário e gera reflexos em DSR, Férias + 1/3, 13º Salário e FGTS.</p>
+        </div>
+    </div>
+</div>
+
+<!-- PART 4: Slide 11 - Riscos Intro -->
+<div class="slide-container" id="slide11">
+     <div class="content-area single-column-centered">
+        <h3 style="color: #e67e22; text-transform: uppercase; font-size: 18px; letter-spacing: 2px;">Parte 4</h3>
+        <h2 style="font-size: 60px; margin: 10px 0 40px;">Verbas e Riscos</h2>
+        <p>Atenção a pagamentos incorretamente classificados como "ajuda de custo" ou "prêmios".</p>
+        
+        <div class="qa-box">
+            <span class="qa-box-title"><i class="fa-solid fa-circle-question"></i> Dúvida: Ajuda de custo habitual integra salário?</span>
+            <p class="qa-box-content"><strong>SIM.</strong> Se a ajuda de custo for paga mensalmente sem comprovação de despesa, a justiça entende que o valor perde a natureza indenizatória e passa a <strong>integrar o salário</strong> para todos os fins.</p>
+        </div>
+    </div>
+</div>
+
+<!-- PART 4: Slide 12 - Alimentação -->
+<div class="slide-container" id="slide12">
+    <h2 class="slide-title">Auxílio-Alimentação</h2>
+    <div class="content-area">
+        <div class="two-column tiled">
+            <div>
+                <div class="icon-large"><i class="fa-solid fa-credit-card"></i></div>
+                <h3>Cartão / Ticket</h3>
+                <p style="font-size: 28px; font-weight: 700; color: #2c3e50;">Natureza Indenizatória</p>
+                <hr>
+                <p><i class="fa-solid fa-check" style="color: #27ae60;"></i> Não sofre encargos trabalhistas.</p>
+            </div>
+            <div>
+                <div class="icon-large" style="color: #c0392b; background: rgba(192, 57, 43, 0.1);"><i class="fa-solid fa-money-bill-wave"></i></div>
+                <h3 style="color: #c0392b;">Dinheiro Vivo</h3>
+                <p style="font-size: 28px; font-weight: 700; color: #2c3e50;">Natureza Salarial</p>
+                <hr>
+                <p><i class="fa-solid fa-triangle-exclamation" style="color: #c0392b;"></i> Sofre tributação total.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PART 4: Slide 13 - Prêmios -->
+<div class="slide-container" id="slide13">
+    <h2 class="slide-title">Prêmios e Bônus</h2>
+    <div class="content-area">
+        <div class="two-column">
+             <div>
+                <p style="font-size: 26px;">Para evitar tributação, siga regras estritas:</p>
+                
+                <div style="margin-top: 30px;">
+                    <div style="display: flex; align-items: flex-start; margin-bottom: 25px;">
+                        <i class="fa-solid fa-circle-check" style="color: #27ae60; font-size: 30px; margin-right: 15px; margin-top: 5px;"></i>
+                        <div>
+                            <strong style="font-size: 24px; color: #27ae60;">Correto (Isento)</strong>
+                            <p style="margin: 5px 0 0;">Desempenho extraordinário ("algo a mais"). Eventual.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; align-items: flex-start;">
+                        <i class="fa-solid fa-circle-xmark" style="color: #c0392b; font-size: 30px; margin-right: 15px; margin-top: 5px;"></i>
+                        <div>
+                            <strong style="font-size: 24px; color: #c0392b;">Incorreto (Tributado)</strong>
+                            <p style="margin: 5px 0 0;">Pago todo mês pelo trabalho cotidiano habitual.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                 <i class="fa-solid fa-trophy" style="font-size: 180px; color: #f1c40f; text-shadow: 0 10px 20px rgba(0,0,0,0.1);"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PART 5: Slide 14 - Intro PJ -->
+<div class="slide-container section-title-layout" id="slide14">
+    <h3 style="color: #7f8c8d; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 20px;">Parte 5</h3>
+    <h2>Pejotização e<br><span style="color: #e74c3c;">Conclusão</span></h2>
+    <div style="width: 100px; height: 6px; background: #e74c3c; margin-top: 30px;"></div>
+</div>
+
+<!-- PART 5: Slide 15 - Conceito -->
+<div class="slide-container" id="slide15">
+    <h2 class="slide-title">PJ vs. Empregado</h2>
+    <div class="content-area single-column-centered">
+        <h3 style="color: #c0392b; font-size: 36px; margin-bottom: 30px;">Pontos de Atenção</h3>
+        <p style="font-size: 26px;">A contratação de Pessoa Jurídica (PJ) deve corresponder a uma <strong>real autonomia</strong> na prestação dos serviços.</p>
+        <div style="background: #eef2f5; padding: 30px; border-radius: 12px; margin-top: 30px; width: 100%; border-left: 6px solid #3498db; text-align: left;">
+            <strong style="display: block; margin-bottom: 15px; color: #2c3e50; font-size: 24px;">Requisitos de Vínculo:</strong>
+            <p style="font-size: 22px; margin: 0;">A existência de subordinação jurídica, pessoalidade e habitualidade pode configurar vínculo empregatício pela CLT, independentemente do contrato firmado.</p>
+        </div>
+    </div>
+</div>
+
+<!-- PART 5: Slide 16 - Consequências -->
+<div class="slide-container" id="slide16">
+    <h2 class="slide-title">Riscos da Descaracterização</h2>
+    <div class="content-area">
+        <div class="two-column tiled" style="grid-template-columns: 1fr 1fr 1fr; gap: 30px;">
+            <div>
+                <div class="icon-large"><i class="fa-solid fa-gavel"></i></div>
+                <h3>Vínculo Empregatício</h3>
+                <p>Possibilidade de reconhecimento do vínculo CLT, cobrindo todo o período da prestação de serviços.</p>
+            </div>
+            <div>
+                <div class="icon-large" style="color: #e67e22; background: rgba(230, 126, 34, 0.1);"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                <h3 style="color: #e67e22;">Passivo Trabalhista</h3>
+                <p>Pagamento retroativo de verbas como 13º, férias e FGTS.</p>
+            </div>
+            <div>
+                <div class="icon-large" style="color: #c0392b; background: rgba(192, 57, 43, 0.1);"><i class="fa-solid fa-sack-dollar"></i></div>
+                <h3 style="color: #c0392b;">Multas</h3>
+                <p>Aplicação de sanções administrativas pelos órgãos fiscalizadores.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide-container');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                if (i === index) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+        }
+
+        // Mostrar o primeiro slide inicialmente
+        showSlide(currentSlide);
+
+        // Adicionar event listener para as setas do teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'Enter') {
+                // Avançar
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    showSlide(currentSlide);
+                }
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                // Voltar
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    showSlide(currentSlide);
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
